@@ -138,7 +138,9 @@ Operating inside Supervisor Space (Ring 0) removes user-space memory protection 
 
 [System Memory Space]
 
+```text
 +-------------------------------------------------------------+
+
 | Kernel Memory Space (Ring 0)                                |
 |   +------------------+     Pointer Manipulation             |
 |   | sys_call_table   |-----------------------+              |
@@ -158,7 +160,7 @@ Operating inside Supervisor Space (Ring 0) removes user-space memory protection 
 |                                    CRITICAL KERNEL PANIC    |
 |                                    ====================     |
 +-------------------------------------------------------------+
-
+```
 
 * **Dangling Pointer Instability (Kernel Panic):** If the module text segment is de-allocated or forced out of kernel space without properly clean-executing the `Linux_LKM_SysInterceptor_exit` destructor vector, the target index inside `sys_call_table` remains bound to a dead memory address. The subsequent invocation of that system call index by any host process will instantly trigger an unrecoverable Page Fault, inducing an immediate system collapse (Kernel Panic).
 * **Multicore Race Conditions:** Simultaneous state mutation of hardware control registers (`CR0`) across separate physical CPU cores during pointer swap operations can induce core out-of-sync states or split-lock synchronization faults.
